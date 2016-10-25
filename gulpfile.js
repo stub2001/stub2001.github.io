@@ -11,6 +11,7 @@ var notify = require('gulp-notify');
 var cssmin = require('gulp-cssmin');
 var plumber = require('gulp-plumber');
 var clean = require('gulp-clean');
+var deploy = require("gulp-gh-pages");
 
 var jekyll = process.platform === 'win32' ? 'jekyll.bat' : 'jekyll';
 var messages = {
@@ -112,6 +113,14 @@ gulp.task('watch', function() {
     gulp.watch('_scss/**/*.scss', ['sass']);
     gulp.watch('_js/*.js', ['scripts']);
     gulp.watch(['*.html', '_includes/**/*.html', '_data/*.yml', '_layouts/*.html', '*.md', '_posts/**/*'], ['jekyll-rebuild']);
+});
+
+/**
+ * Deploy/publish site to github pages
+ */
+gulp.task("deploy", ["jekyll-build"], function() {
+    return gulp.src("./_site/**/*")
+        .pipe(deploy([options.branch = "master"]));
 });
 
 /**
